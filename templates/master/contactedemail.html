@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container">
+  <div class="row">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>E mail</th>
+          <th>Subject</th>
+          <th>Message</th>
+          <th>Replied</th>
+          <th>Created on</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for email in emails %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{email.name}}</td>
+          <td>{{email.email}}</td>
+          <td>{{email.subject}}</td>
+          <td>{{email.message}}</td>
+          {% if not email.is_replied %}
+          <td>
+            <a
+              href="{% url 'contactus_send_reply' email.id %}"
+              class="btn btn-primary"
+              >Send Reply</a
+            >
+          </td>
+          {% else %}
+          <td>
+            <a
+              href="{% url 'contactus_view_reply' email.id %}"
+              class="btn btn-primary"
+              >View Reply</a
+            >
+          </td>
+          {% endif %}
+
+          <td>{{email.created_on}}</td>
+          <td>{{email.status}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

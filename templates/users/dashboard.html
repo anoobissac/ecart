@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>User Dashboard</h1>
+      {% if profile %}
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td rowspan="5">
+                <img src="{{profile.image.url}}" alt="noimage">
+            </td>
+            <td >{{profile.first_name}}</td>
+            <td >{{profile.last_name}}</td>
+            <td >{{profile.address}}</td>
+          </tr>
+        </tbody>
+      </table>
+     
+      {% else %}
+      <a href="{% url 'profile_create' %}" class="btn btn-primary"
+        >Add Profile</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
