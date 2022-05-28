@@ -54,5 +54,8 @@ class CartModel(models.Model):
     updated_on=models.DateTimeField(auto_now=True)
     status= models.BooleanField(default=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.total = self.get_total()
     def __str__(self) -> str:
         return str(self.total)

@@ -1,10 +1,20 @@
-from django.shortcuts import render
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
-from user.models import ProfileModel
+import requests
+from django.shortcuts import render,redirect
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View,RedirectView
+from django.conf import settings
 from django.urls import reverse_lazy
-from user.forms import UserForm
-from user.forms import ProfileForm, UserForm
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 from user.models import ProfileModel
+from user.forms import UserForm
+from user.forms import ProfileForm, UserForm,LoginForm
+
+
+
+
+
 
 
 # Create your views here.
@@ -66,7 +76,7 @@ class UserRegistrationView(CreateView):
 # class DashboardView(TemplateView):
 #     template_name = 'user/dashboard.html'
 
-class DashboardView(View):
+class DashboardView(LoginRequiredMixin, View):
     template_name = 'users/dashboard.html'
 
     def get(self, request):
@@ -83,5 +93,51 @@ class DashboardView(View):
         queryset = ProfileModel.objects.filter(user=self.request.user).first()
         return queryset
 
+class LoginView(View):
+    template_name="registration/login.html"
+    form_class=LoginForm
+    def get (self,request):
+        context={
+            "form": self.form_class()
+        }
+        return render(request,self.template_name,context)
+
+    def post (self,request):
+        form =self.form_class(request.POST)
+        
+        if form.is_valid():
+            self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+        return redirect(reverse_lazy('dashboard'))
+
+    def form_valid(self,form):
+        
+        user=None
+        data=form.cleaned_data
+        username=data['username']
+        password=data['password']
+        recaptcha_response = self.request.POST.get("g-recaptcha-response")
+        values={
+            'secret':settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response':recaptcha_response
+        }
+        url=settings.GOOGLE_RECAPTCHA_VERIFY_URL
+        data=requests.post(url,data=values).json()
+        if data['success']:
+            user=authenticate(self.request,username=username,password=password)
+        if user is None:
+            return self.form_invalid(form)
+        login(self.request,user)
 
 
+    def form_invalid(self,form):
+        context={
+            'form':form
+        }
+        return render(self.request,self.template_name,context)
+
+class LogoutView(View):
+    def get(self,request):
+        logout(request)
+        return redirect(reverse_lazy('home'))

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <div class="container-fluid" style="background-color: black">
+  <div class="container-fluid" style="background-color: rgb(57, 57, 57)">
     <a class="navbar-brand" href="#" style="padding-top: 28px"
       ><h2>Ecart</h2></a
     >
@@ -30,7 +30,9 @@
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
           {% for category in category %}
           <li>
-            <a class="dropdown-item" href="{% url 'searchlist' category.id %}">{{category.name}}</a>
+            <a class="dropdown-item" href="{% url 'searchlist' category.id %}"
+              >{{category.name}}</a
+            >
           </li>
           {% endfor %}
         </ul>
@@ -91,23 +93,26 @@
         {% endif %}
       </div>
     </div>
+    <button type="button" class="btn btn-primary position-relative me-3">
+      <span class="bi bi-cart"></span>Cart
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        99+
+        <span class="visually-hidden">unread messages</span>
+      </span>
+    </button>
+    <form method="get" action="{% url 'search_product' %}" class="d-flex">
+      {% csrf_token %}
+      <input
+        name="query"
+        class="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-success" type="submit">Search</button>
+    </form>
   </div>
-  <button type="button" class="btn btn-primary">
-    <span class="bi bi-cart"></span>Cart
-  </button>
-  <form method="get" action="{% url 'search_product' %}" class="d-flex">
-    {% csrf_token %}
-    <input
-      name="query"
-      class="form-control me-2"
-      type="search"
-      placeholder="Search"
-      aria-label="Search"
-    />
-    <button class="btn btn-outline-success" type="submit">Search</button>
-  </form>
 </nav>
-<br />
 <br />
 <br />
 <br />

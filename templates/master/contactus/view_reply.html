@@ -1,13 +1,26 @@
-{% extends 'base.html' %} 
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-           {{object.reply}}
-        </div>
+  <div class="row">
+    <div class="col">
+      <table>
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>Email</th>
+            <th>MESSSAGE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{object.name}}</td>
+            <td>{{object.email}}</td>
+            <td>{{object.reply}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
 
 {% endblock content %}
